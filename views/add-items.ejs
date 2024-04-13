@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+    />
+    <title>Add-items</title>
+  </head>
+  <body>
+    <%- include('./patial/nav.ejs') %>
+    <div class="row">
+      <form class="col s12" action="/items" method="POST">
+        <div class="row">
+          <div class="input-field col s6">
+            <i class="material-icons prefix">shopping_cart</i>
+            <input id="item_name" type="text" class="validate" name="name" />
+            <label for="item_name">Item name</label>
+          </div>
+          <div class="input-field col s6">
+            <i class="material-icons prefix">request_quote</i>
+            <input id="price" type="tel" class="validate" name="price" />
+            <label for="price">price</label>
+          </div>
+        </div>
+        <button class="btn">Add Items</button>
+      </form>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  </body>
+</html>

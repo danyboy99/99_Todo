@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+    />
+    <title>HomePage</title>
+  </head>
+  <body>
+    <%- include('./patial/nav.ejs') %>
+    <div id="itemContainer" class="container">
+      <ul class="collection with-header">
+        <% if (items.length>0){ %> <% items.forEach(items =>{ %>
+        <li class="collection-item">
+          <div>
+            <a href="/items/<%=items._id%>"
+              ><%= items.name%> $<%= items.price%></a
+            >
+            <a href="#!" class="secondary-content"
+              ><i class="material-icons" data-id="<%=items._id%>">delete</i>
+              <i
+                class="material-icons modal-trigger"
+                href="#edit_item_modal"
+                data-id="<%=items._id%>"
+                >edit</i
+              ></a
+            >
+          </div>
+        </li>
+        <% })%> <% }else{%>
+        <li>there is no item!!</li>
+        <% }%>
+      </ul>
+    </div>
+    <div id="edit_item_modal" class="modal">
+      <div class="modal-content">
+        <h4>Edit from</h4>
+        <form id="edit_item" action="">
+          <input type="text" name="name" placeholder="item name" />
+          <input type="number" name="price" placeholder="item price" />
+          <button class="btn">update</button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <a href="#!" class="modal-close waves-effect waves-green btn-flat"
+          >Agree</a
+        >
+      </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script>
+      var updateId;
+      document.addEventListener("DOMContentLoaded", function () {
+        var elems = document.querySelectorAll(".modal");
+        var instances = M.Modal.init(elems);
+      });
+
+      edit_item.onsubmit = async (e) => {
+        e.preventDefault();
+        let data = new FormData(edit_item);
+        //to console.log data 
+        // for (var pair of data.entries()) {
+        //   console.log(pair[0] + "," + pair[1]);
+        // }
+        let response = await fetch(`/items/${updateId}`, {
+          method: "PUT",
+          body: new URLSearchParams(data),
+          headers: new Headers({
+            "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+          }),
+        });
+
+        let result = await response.json();
+        edit_item.reset();
+        window.location.reload();
+        alert(result.msg);
+      };
+
+      itemContainer.onclick = (e) => {
+        console.log("e.target.textContent", e.target.textContent);
+        if (e.target.textContent === "edit") {
+          updateId = e.target.getAttribute("data-id");
+          //console.log("updateId", updateId);
+        }
+        if (e.target.textContent === "delete") {
+          const id = e.target.getAttribute("data-id");
+          console.log(id);
+          const endPoint = `/items/${id}`;
+          fetch(endPoint, {
+            method: "DELETE",
+          })
+            .then((res) => {
+              return res.json();
+            })
+            .then((data) => {
+              console.log(data);
+              window.location.href = data.redirect;
+            });
+        }
+      };
+    </script>
+  </body>
+</html>
